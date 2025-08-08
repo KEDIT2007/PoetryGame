@@ -4,9 +4,43 @@
     <meta charset="UTF-8">
     <title>古诗词接龙</title>
     <link rel="stylesheet" href="/style.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #game-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+        #left-panel {
+            width: 280px;
+            min-width: 160px;
+            max-width: 460px;
+            background: #f5f5f8;
+            box-sizing: border-box;
+            overflow-y: auto;
+            transition: background 0.2s;
+        }
+        #resizer {
+            width: 6px;
+            cursor: ew-resize;
+            background: #ddd;
+            height: 100vh;
+            z-index: 10;
+        }
+        #right-panel {
+            flex: 1;
+            background: #fff;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        /* 保持其他原有样式 */
+    </style>
 </head>
 <body>
-    <!-- (大厅, 游戏左侧面板, 房间未找到, 昵称模态框等视图保持不变) -->
     <div id="lobby-container">
         <h1>古诗词游戏大厅</h1>
         <div class="lobby-main">
@@ -39,6 +73,7 @@
                 <ul id="queue-list"></ul>
             </div>
         </div>
+        <div id="resizer"></div>
         <div id="right-panel">
             <ul id="messages"></ul>
             <div id="char-choice-panel" style="display: none;">
@@ -61,7 +96,6 @@
                     <p>等待其他玩家对 [<strong></strong>] 进行投票...</p>
                 </div>
             </div>
-            <!-- 【核心修改】修改输入表单结构 -->
             <form id="form">
                 <input id="input" autocomplete="off" placeholder="请输入诗句..."/>
                 <button id="submit-answer-btn" type="submit">发送</button>
@@ -97,5 +131,37 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/client.js"></script>
+    <script>
+        // 拖动分割线实现
+        const leftPanel = document.getElementById('left-panel');
+        const resizer = document.getElementById('resizer');
+        let isResizing = false;
+
+        resizer.addEventListener('mousedown', function(e) {
+            isResizing = true;
+            document.body.style.cursor = 'ew-resize';
+            // 防止拖动时选中文字
+            document.body.style.userSelect = 'none';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isResizing) return;
+            const minWidth = 160;
+            const maxWidth = 460;
+            let newWidth = e.clientX;
+            // 防止拖到页面外
+            if (newWidth < minWidth) newWidth = minWidth;
+            if (newWidth > maxWidth) newWidth = maxWidth;
+            leftPanel.style.width = newWidth + 'px';
+        });
+
+        document.addEventListener('mouseup', function() {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = '';
+                document.body.style.userSelect = '';
+            }
+        });
+    </script>
 </body>
 </html>
