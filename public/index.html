@@ -41,6 +41,7 @@
     </style>
 </head>
 <body>
+    <!-- (大厅, 游戏左侧面板, 房间未找到, 昵称模态框等视图保持不变) -->
     <div id="lobby-container">
         <h1>古诗词游戏大厅</h1>
         <div class="lobby-main">
@@ -96,6 +97,7 @@
                     <p>等待其他玩家对 [<strong></strong>] 进行投票...</p>
                 </div>
             </div>
+            <!-- 【核心修改】修改输入表单结构 -->
             <form id="form">
                 <input id="input" autocomplete="off" placeholder="请输入诗句..."/>
                 <button id="submit-answer-btn" type="submit">发送</button>
